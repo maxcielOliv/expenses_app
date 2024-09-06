@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
 
-class TransactionForm extends StatelessWidget {
-  TransactionForm({
+class TransactionForm extends StatefulWidget {
+  final void Function(String, double) onSubmit;
+
+  const TransactionForm({
     super.key,
     required this.onSubmit,
   });
 
-  final void Function(String, double) onSubmit;
+  @override
+  State<TransactionForm> createState() => _TransactionFormState();
+}
 
+class _TransactionFormState extends State<TransactionForm> {
   final titleController = TextEditingController();
   final valueController = TextEditingController();
+
+  submitForm() {
+    final title = titleController.text;
+    final value = double.tryParse(valueController.text) ?? 0.0;
+
+    if (title.isEmpty || value <= 0) {
+      return;
+    }
+
+    widget.onSubmit(title, value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +37,16 @@ class TransactionForm extends StatelessWidget {
           children: [
             TextField(
               controller: titleController,
+              onSubmitted: (value) => submitForm(),
               decoration: const InputDecoration(
                 labelText: 'Título',
               ),
             ),
             TextField(
               controller: valueController,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
+              onSubmitted: (value) => submitForm(),
               decoration: const InputDecoration(
                 labelText: 'Valor (R\$)',
               ),
@@ -35,13 +55,12 @@ class TransactionForm extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               child: TextButton(
                 onPressed: () {
-                  final title = titleController.text;
-                  final value = double.tryParse(valueController.text) ?? 0.0;
-                  onSubmit(title, value);
+                  submitForm();
                 },
-                child: const Text(
+                child: Text(
                   'Nova Transação',
-                  style: TextStyle(color: Colors.purple),
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.primary),
                 ),
               ),
             )

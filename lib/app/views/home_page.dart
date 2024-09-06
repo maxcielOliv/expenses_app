@@ -1,19 +1,75 @@
-import 'package:despesas_app/app/components/transaction_user.dart';
+import 'dart:math';
+import 'package:despesas_app/app/components/transaction_form.dart';
+import 'package:despesas_app/app/components/transaction_list.dart';
+import 'package:despesas_app/app/models/transaction.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final _transactions = [
+    Transaction(
+        id: 't1',
+        title: 'Novo Tênis de Corrida',
+        value: 310.67,
+        date: DateTime.now()),
+    Transaction(
+      id: 't2',
+      title: 'Conta de Luz',
+      value: 211.30,
+      date: DateTime.now(),
+    ),
+  ];
+
+  addTransaction(String title, double value) {
+    final newTransaction = Transaction(
+      id: Random().nextDouble().toString(),
+      title: title,
+      value: value,
+      date: DateTime.now(),
+    );
+
+    setState(
+      () {
+        _transactions.add(newTransaction);
+      },
+    );
+
+    Navigator.pop(context);
+  }
+
+  openTransactionFormModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return TransactionForm(
+          onSubmit: addTransaction,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Despesas Pessoais'),
+        actions: [
+          IconButton(
+            onPressed: () => openTransactionFormModal(context),
+            icon: const Icon(Icons.add),
+          ),
+        ],
       ),
-      body: const SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               width: double.infinity,
               child: Card(
                 color: Colors.blue,
@@ -21,9 +77,13 @@ class HomePage extends StatelessWidget {
                 child: Text('Gráfico'),
               ),
             ),
-            TransactionUser()
+            TransactionList(transactions: _transactions),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => openTransactionFormModal(context),
+        child: const Icon(Icons.add),
       ),
     );
   }

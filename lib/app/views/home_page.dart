@@ -12,18 +12,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _transactions = [
-    Transaction(
-        id: 't1',
-        title: 'Novo Tênis de Corrida',
-        value: 310.67,
-        date: DateTime.now()),
-    Transaction(
-      id: 't2',
-      title: 'Conta de Luz',
-      value: 211.30,
-      date: DateTime.now(),
-    ),
+  final List<Transaction> _transactions = [
+    // Transaction(
+    //     id: 't1',
+    //     title: 'Novo Tênis de Corrida',
+    //     value: 310.67,
+    //     date: DateTime.now()),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Conta de Luz',
+    //   value: 211.30,
+    //   date: DateTime.now(),
+    // ),
   ];
 
   addTransaction(String title, double value) {
@@ -58,7 +58,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Despesas Pessoais'),
+        title: const Text(
+          'Despesas Pessoais',
+        ),
         actions: [
           IconButton(
             onPressed: () => openTransactionFormModal(context),

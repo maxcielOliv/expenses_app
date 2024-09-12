@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:despesas_app/app/components/chart.dart';
 import 'package:despesas_app/app/components/transaction_form.dart';
 import 'package:despesas_app/app/components/transaction_list.dart';
 import 'package:despesas_app/app/models/transaction.dart';
@@ -25,6 +26,13 @@ class _HomePageState extends State<HomePage> {
     //   date: DateTime.now(),
     // ),
   ];
+
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((transaction) {
+      return transaction.date
+          .isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
 
   addTransaction(String title, double value) {
     final newTransaction = Transaction(
@@ -71,14 +79,7 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                elevation: 5,
-                child: Text('Gráfico'),
-              ),
-            ),
+            Chart(recentTransaction: _recentTransactions),
             TransactionList(transactions: _transactions),
           ],
         ),

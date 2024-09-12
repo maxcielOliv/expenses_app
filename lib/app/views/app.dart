@@ -29,6 +29,7 @@ class App extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        primaryColor: Colors.purple,
       ),
       routes: {'/': (context) => const HomePage()},
     );

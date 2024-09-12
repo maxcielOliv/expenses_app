@@ -1,3 +1,4 @@
+import 'package:despesas_app/app/components/chart_bar.dart';
 import 'package:despesas_app/app/models/transaction.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -38,12 +39,20 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    groupedTransactions;
     return Card(
       elevation: 6,
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       child: Row(
-        children: [],
-      ),
+          children: groupedTransactions.map(
+        (tr) {
+          return ChartBar(
+            label: '${tr['day']}',
+            value: tr['value'] as double,
+            percentage: 0.9,
+          );
+        },
+      ).toList()),
     );
   }
 }

@@ -17,8 +17,11 @@ class _HomePageState extends State<HomePage> {
 
   List<Transaction> get _recentTransactions {
     return _transactions.where((transaction) {
-      return transaction.date
-          .isAfter(DateTime.now().subtract(Duration(days: 7)));
+      return transaction.date.isAfter(
+        DateTime.now().subtract(
+          const Duration(days: 7),
+        ),
+      );
     }).toList();
   }
 
@@ -37,6 +40,14 @@ class _HomePageState extends State<HomePage> {
     );
 
     Navigator.pop(context);
+  }
+
+  _removeTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tr) {
+        return tr.id == id;
+      });
+    });
   }
 
   openTransactionFormModal(BuildContext context) {
@@ -68,7 +79,10 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Chart(recentTransaction: _recentTransactions),
-            TransactionList(transactions: _transactions),
+            TransactionList(
+              transactions: _transactions,
+              onRemove: _removeTransaction,
+            ),
           ],
         ),
       ),

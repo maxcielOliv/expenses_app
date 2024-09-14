@@ -3,9 +3,11 @@ import 'package:intl/intl.dart';
 import '../models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
-  const TransactionList({super.key, required this.transactions});
+  const TransactionList(
+      {super.key, required this.transactions, required this.onRemove});
 
   final List<Transaction> transactions;
+  final void Function(String) onRemove;
   final separator = const SizedBox(height: 20);
 
   @override
@@ -51,6 +53,13 @@ class TransactionList extends StatelessWidget {
                     ),
                     subtitle: Text(
                       DateFormat('d MMM y').format(tr.date),
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {
+                        onRemove(tr.id);
+                      },
+                      color: Theme.of(context).colorScheme.secondary,
+                      icon: const Icon(Icons.delete),
                     ),
                   ),
                 );

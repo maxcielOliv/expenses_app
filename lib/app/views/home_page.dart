@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Transaction> _transactions = [];
+  bool _showchart = false;
 
   List<Transaction> get _recentTransactions {
     return _transactions.where((transaction) {
@@ -63,11 +64,24 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    bool isLandscape = mediaQuery.orientation == Orientation.landscape;
+
     final appBar = AppBar(
+      backgroundColor: Theme.of(context).primaryColor,
       title: const Text(
         'Despesas Pessoais',
       ),
       actions: [
+        if (isLandscape)
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _showchart = !_showchart;
+              });
+            },
+            icon: Icon(_showchart ? Icons.list : Icons.show_chart),
+          ),
         IconButton(
           onPressed: () => openTransactionFormModal(context),
           icon: const Icon(Icons.add),
@@ -75,25 +89,29 @@ class _HomePageState extends State<HomePage> {
       ],
     );
 
-    final availableHeight = MediaQuery.of(context).size.height -
+    final availableHeight = mediaQuery.size.height -
         appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top;
+        mediaQuery.padding.top;
 
     return Scaffold(
       appBar: appBar,
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SizedBox(
-                height: availableHeight * 0.25,
-                child: Chart(recentTransaction: _recentTransactions)),
-            SizedBox(
-              height: availableHeight * 0.75,
-              child: TransactionList(
-                transactions: _transactions,
-                onRemove: _removeTransaction,
+            if (_showchart || !isLandscape)
+              SizedBox(
+                height: availableHeight * (isLandscape ? 0.7 : 0.3),
+                child: Chart(recentTransaction: _recentTransactions),
               ),
-            ),
+            if (!_showchart || !isLandscape)
+              SizedBox(
+                height: availableHeight * (isLandscape ? 1 : 0.7),
+                child: TransactionList(
+                  transactions: _transactions,
+                  onRemove: _removeTransaction,
+                ),
+              ),
           ],
         ),
       ),

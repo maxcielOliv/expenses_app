@@ -13,18 +13,26 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return transactions.isEmpty
-        ? Column(
-            children: [
-              const Text('Nenhuma Transação Cadastrada!'),
-              separator,
-              SizedBox(
-                height: 200,
-                child: Image.asset(
-                  'assets/images/waiting.png',
-                  fit: BoxFit.cover,
+        ? LayoutBuilder(
+            builder: (context, constraints) => Column(
+              children: [
+                SizedBox(
+                  height: constraints.maxHeight * 0.2,
+                  child: const Text(
+                    'Nenhuma Transação Cadastrada!',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
                 ),
-              )
-            ],
+                separator,
+                SizedBox(
+                  height: constraints.maxHeight * 0.6,
+                  child: Image.asset(
+                    'assets/images/waiting.png',
+                    fit: BoxFit.cover,
+                  ),
+                )
+              ],
+            ),
           )
         : ListView.builder(
             itemCount: transactions.length,
@@ -51,13 +59,19 @@ class TransactionList extends StatelessWidget {
                   subtitle: Text(
                     DateFormat('d MMM y').format(tr.date),
                   ),
-                  trailing: IconButton(
-                    onPressed: () {
-                      onRemove(tr.id);
-                    },
-                    color: Theme.of(context).colorScheme.secondary,
-                    icon: const Icon(Icons.delete),
-                  ),
+                  trailing: MediaQuery.of(context).size.width > 480
+                      ? TextButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.delete),
+                          label: const Text('Excluir'),
+                        )
+                      : IconButton(
+                          onPressed: () {
+                            onRemove(tr.id);
+                          },
+                          color: Theme.of(context).colorScheme.secondary,
+                          icon: const Icon(Icons.delete),
+                        ),
                 ),
               );
             },

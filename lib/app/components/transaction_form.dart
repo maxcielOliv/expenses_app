@@ -1,10 +1,11 @@
+
 import 'package:despesas_app/app/components/adaptative_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TransactionForm extends StatefulWidget {
   final void Function(String, double, DateTime) onSubmit;
-
+  
   const TransactionForm({
     super.key,
     required this.onSubmit,
